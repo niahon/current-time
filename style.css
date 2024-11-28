@@ -13,3 +13,41 @@ html {
     box-sizing: inherit;
 }
 
+body {
+    background-color: rgb(3, 2, 22);
+}
+
+main {
+    margin-top: 10rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+    .info-container {
+        padding: 2.5rem;
+        border-radius: 2rem;
+        font-size: 2rem;
+        background-color: white;
+        
+        @media (min-width: 480px) {
+            font-size: 2.75em;
+        }
+        
+        @media (min-width: 768px) {
+            font-size: 3.25em;
+        }
+        @media (min-width: 1000px) {
+            font-size: 3em;   
+        }
+    }
+        #timezone {
+            font-size: 0.5em;
+            color: grey;
+        }
+        #time {
+            font-size: 2em;
+        }
+        #weekday, 
+        #date {
+            font-size: 0.6em;
+        }

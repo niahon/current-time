@@ -1,2 +1,2 @@
 # current-time
-A site that shows the current time of the user's timezone
+A site that shows the user's timezone, time and date  

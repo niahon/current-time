@@ -3,6 +3,20 @@ const utc = require('dayjs/plugin/utc');
 const timezone = require('dayjs/plugin/timezone');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 
+
+const modal = document.querySelector(".modal");
+const openModal = document.querySelector(".open-modal");
+const closeModal = document.querySelector(".close-modal");
+
+openModal.addEventListener("click", () => {
+    modal.showModal();
+})
+
+closeModal.addEventListener("click", () => {
+    modal.close();
+})
+
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(customParseFormat);

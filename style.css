@@ -51,3 +51,12 @@ main {
         #date {
             font-size: 0.6em;
         }
+
+.invisible {
+    display: none;
+}
+
+.modal {
+    margin: 40vh auto 0 auto;
+    padding: 1.5rem;
+}

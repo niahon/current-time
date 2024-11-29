@@ -10,11 +10,19 @@
 <body>
     <main>
         <div class="info-container">
+            <button class="open-modal" data-micromodal-trigger="modal-1">Open</button>
             <p id="timezone"></p>
             <p id="time"></p>
             <p id="weekday"></p>
             <p id="date"></p>
         </div>
+        <dialog class="modal">
+            <h2>Select a timezone</h2>
+            <select name="timezone-select" id="timezone-select">
+            </select>
+            <button class="close-modal">Apply</button>
+        </dialog>
     </main>
+    
 </body>
 </html>

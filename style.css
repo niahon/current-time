@@ -56,7 +56,22 @@ main {
     display: none;
 }
 
+.open-modal {
+    background: none;
+    border: none;
+    align-self: center;
+}
+    .open-modal:hover {
+        cursor: pointer;
+    }
+
 .modal {
     margin: 40vh auto 0 auto;
     padding: 1.5rem;
+}
+
+#timezone-flex {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.1rem;
 }

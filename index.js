@@ -143,6 +143,9 @@ function updateDisplay(tz) {
     if (String(updatedSeconds).length < 2) {
         updatedSeconds = `0${updatedSeconds}`;
     }
+    if (String(updatedMinutes).length < 2) {
+        updatedMinutes = `0${updatedMinutes}`;
+    }
     if (String(updatedHours).length < 2) {
         updatedHours = `0${updatedHours}`;
     }
@@ -158,6 +161,8 @@ function updateDisplay(tz) {
     if (elDate.textContent != updatedDate) {
         elDate.textContent = updatedDate;
     }
-
+    
+    tz = tz.replace("_", " ");
+    tz = tz.replace("/", " - ");
     elTimezone.textContent = tz;
 }

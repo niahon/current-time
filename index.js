@@ -19,6 +19,10 @@ const weekArray = [
     "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
 ];
 
+let dayOfMonth;
+let month;
+let monthNumber
+let year;
 
 
 window.addEventListener("load", () => {
@@ -71,10 +75,11 @@ function getWeekday() {
 }
 
 function getDate() {
-    let dayOfMonth = dayjs().date();
-    let month = dayjs().month();
+    dayOfMonth = dayjs().date();
+    monthNumber = dayjs().month();
+    month = monthNumber;
     month = monthsArray[month];
-    let year = dayjs().year();
+    year = dayjs().year();
     
     // add 0 if number has only 1 digit
    
@@ -121,7 +126,38 @@ function changeTimezone() {
     updateDisplay(currentTimezone);
 }
 
-
 function updateDisplay(tz) {
-    console.log(tz);
+    let dateObj = dayjs(`${year}-${monthNumber + 1}-${dayOfMonth} ${elTime.textContent}`).tz(tz);
+    let updatedYear = dateObj.$y;
+    let updatedMonth = monthsArray[dateObj.$M];
+    let updatedDay = dateObj.$D;
+
+    let updatedHours = dateObj.$H;
+    let updatedMinutes = dateObj.$m;
+    let updatedSeconds = dateObj.$s;
+
+
+    if (String(updatedDay).length < 2) {
+        updatedDay = `0${updatedDay}`;
+    }
+    if (String(updatedSeconds).length < 2) {
+        updatedSeconds = `0${updatedSeconds}`;
+    }
+    if (String(updatedHours).length < 2) {
+        updatedHours = `0${updatedHours}`;
+    }
+
+    let updatedDate = `${updatedMonth} ${updatedDay}, ${updatedYear}`;
+    let updatedTime = `${updatedHours}:${updatedMinutes}:${updatedSeconds}`;
+
+    if (elTime.textContent != updatedTime) {
+        console.log("foi");
+        elTime.textContent = updatedTime;
+    }
+    
+    if (elDate.textContent != updatedDate) {
+        elDate.textContent = updatedDate;
+    }
+
+    elTimezone.textContent = tz;
 }

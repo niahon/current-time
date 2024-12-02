@@ -3,20 +3,6 @@ const utc = require('dayjs/plugin/utc');
 const timezone = require('dayjs/plugin/timezone');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 
-
-const modal = document.querySelector(".modal");
-const openModal = document.querySelector(".open-modal");
-const closeModal = document.querySelector(".close-modal");
-
-openModal.addEventListener("click", () => {
-    modal.showModal();
-})
-
-closeModal.addEventListener("click", () => {
-    modal.close();
-})
-
-
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(customParseFormat);
@@ -32,6 +18,7 @@ const monthsArray = [
 const weekArray = [
     "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
 ];
+
 
 
 window.addEventListener("load", () => {
@@ -104,4 +91,37 @@ function displayData(tz, time, date, weekday) {
     elTime.textContent = time;
     elDate.textContent = date;
     elWeekday.textContent = weekday;
+}
+
+
+const modal = document.querySelector(".modal");
+const openModal = document.querySelector(".open-modal");
+const closeModal = document.querySelector(".close-modal");
+const timezoneContainer = document.getElementById("timezone-select");
+
+const timezoneList = Intl.supportedValuesOf('timeZone');
+
+for (i of timezoneList) {
+    let option = document.createElement('option');
+    option.setAttribute("value", i);
+    option.textContent = i;
+    timezoneContainer.appendChild(option);
+
+}
+
+openModal.addEventListener("click", () => modal.showModal());
+
+closeModal.addEventListener("click", (e) => {
+    modal.close();
+    changeTimezone();
+});
+
+function changeTimezone() {
+    currentTimezone = timezoneContainer.value;
+    updateDisplay(currentTimezone);
+}
+
+
+function updateDisplay(tz) {
+    console.log(tz);
 }

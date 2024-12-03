@@ -19,85 +19,81 @@ const weekArray = [
     "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
 ];
 
-let dayOfMonth;
-let month;
-let monthNumber
-let year;
-
-
 window.addEventListener("load", () => {
-    let user = getData();
-    displayData(user.timezone, user.time, user.date, user.weekday);
+    dataHandler.getData();
+    dataHandler.displayData();
 })
 
-function getData() {
-    let user = {};
-    user.timezone = getTimezone();
-    user.time = getTime();
-    user.weekday = getWeekday();
-    user.date = getDate();
 
-    return user;
-}
+let dataHandler = {
+    timezone: '',
+    time: '',
+    weekday: '',
+    date: '',
+    getData: function() {
+        this.getTimezone();
+        this.getTime();
+        this.getWeekday();
+        this.getDate();
+    },
+    getTimezone: function() {
+        let userTimezone = dayjs.tz.guess()
+        this.timezone = this.formatTimezone(userTimezone);
+    },
+    formatTimezone: function(tz) {
+        tz = tz.replace("_", " ");
+        tz = tz.replace("/", " - ");
+        return tz;
+    },
+    getTime: function() {
+        let hours = String(dayjs().hour());
+        let minutes = String(dayjs().minute());
+        let seconds = String(dayjs().second());
 
-function getTimezone() {
-    let userTimezone = dayjs.tz.guess()
-    userTimezone = userTimezone.replace("_", " ");
-    userTimezone = userTimezone.replace("/", " - ");
-    return userTimezone;
-}
+        this.time = this.formatTime(hours, minutes, seconds);
+    },
+    formatTime: function(hours, minutes, seconds) {
+        let timeArray = [hours, minutes, seconds];
+        for (i in timeArray) {
+            if (timeArray[i].length < 2) {
+                timeArray[i] = `0${timeArray[i]}`;
+            }
+        }
+        hours = timeArray[0];
+        minutes = timeArray[1];
+        seconds = timeArray[2];
 
-function getTime() {
-    let hours = dayjs().hour();
-    let minutes = dayjs().minute();
-    let seconds = dayjs().second();
-
-    if (String(seconds).length < 2) {
-        seconds = `0${seconds}`;
-    }
-    if (String(minutes).length < 2) {
-        minutes = `0${minutes}`;
-    }
-    if (String(hours).length < 2) {
-        hours = `0${hours}`;
-    }
-
-    let userTime = `${hours}:${minutes}:${seconds}`;
-    return userTime
-}
-
-function getWeekday() {
-    let dayOfWeek = dayjs().day();
-    dayOfWeek = weekArray[dayOfWeek];
-
-    let userWeekday = dayOfWeek;
-    return userWeekday;
-}
-
-function getDate() {
-    dayOfMonth = dayjs().date();
-    monthNumber = dayjs().month();
-    month = monthNumber;
-    month = monthsArray[month];
-    year = dayjs().year();
+        return `${hours}:${minutes}:${seconds}`;
+    },
+    getWeekday: function() {
+        let dayOfWeek = dayjs().day();
+        dayOfWeek = weekArray[dayOfWeek];
     
-    // add 0 if number has only 1 digit
-   
-    if (String(dayOfMonth).length < 2) {
-        dayOfMonth = `0${dayOfMonth}`;
-    }
-
-    let userDate = `${month} ${dayOfMonth}, ${year}`;
-    return userDate;
+        let userWeekday = dayOfWeek;
+        this.weekday = userWeekday;
+    },
+    getDate: function() {
+        dayOfMonth = dayjs().date();
+        monthNumber = dayjs().month();
+        month = monthNumber;
+        month = monthsArray[month];
+        year = dayjs().year();
+        
+        this.date = this.formatDate(dayOfMonth, month, year);
+    },
+    formatDate: function(day, month, year) {
+        if (String(day).length < 2) {
+            day = `0${day}`;
+        }
+        return `${month} ${day}, ${year}`;
+    },
+    displayData: function() {
+        elTimezone.textContent = this.timezone;
+        elTime.textContent = this.time;
+        elDate.textContent = this.date;
+        elWeekday.textContent = this.weekday;
+    },
 }
-
-function displayData(tz, time, date, weekday) {
-    elTimezone.textContent = tz;
-    elTime.textContent = time;
-    elDate.textContent = date;
-    elWeekday.textContent = weekday;
-}
-
 
 const modal = document.querySelector(".modal");
 const openModal = document.querySelector(".open-modal");
@@ -154,7 +150,6 @@ function updateDisplay(tz) {
     let updatedTime = `${updatedHours}:${updatedMinutes}:${updatedSeconds}`;
 
     if (elTime.textContent != updatedTime) {
-        console.log("foi");
         elTime.textContent = updatedTime;
     }
     

@@ -1,4 +1,5 @@
-const dayjs = require('dayjs');
+// import necessary modules and plugins
+const dayjs = require ('dayjs');
 const utc = require('dayjs/plugin/utc');
 const timezone = require('dayjs/plugin/timezone');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
@@ -7,10 +8,17 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(customParseFormat);
 
+// get HTML elements
 const elTimezone = document.getElementById("timezone");
 const elTime = document.getElementById("time");
 const elDate = document.getElementById("date");
 const elWeekday = document.getElementById("weekday");
+
+const modal = document.querySelector(".modal");
+const openModal = document.querySelector(".open-modal");
+const closeModal = document.querySelector(".close-modal");
+const timezoneContainer = document.getElementById("timezone-select");
+
 
 const monthsArray = [
     "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
@@ -19,42 +27,96 @@ const weekArray = [
     "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
 ];
 
+const timezoneList = Intl.supportedValuesOf('timeZone');
+
+// add all timezones to the timezone-select element
+for (let i of timezoneList) {
+    let option = document.createElement('option');
+    option.setAttribute("value", i);
+    option.textContent = i;
+    timezoneContainer.appendChild(option);
+}
+
+// event handlers
 window.addEventListener("load", () => {
     dataHandler.getData();
     dataHandler.displayData();
 })
 
+openModal.addEventListener("click", () => modal.showModal());
 
+closeModal.addEventListener("click", (e) => {
+    modal.close();
+    dataHandler.changeTimezone();
+});
+
+
+// functionality for getting, formatting, displaying and updating data 
 let dataHandler = {
     timezone: '',
     time: '',
     weekday: '',
     date: '',
     getData: function() {
-        this.getTimezone();
-        this.getTime();
-        this.getWeekday();
-        this.getDate();
+        this.timezone = this.getTimezone();
+        this.time = this.getTime();
+        this.weekday = this.getWeekday();
+        this.date = this.getDate();
     },
     getTimezone: function() {
         let userTimezone = dayjs.tz.guess()
-        this.timezone = this.formatTimezone(userTimezone);
-    },
-    formatTimezone: function(tz) {
-        tz = tz.replace("_", " ");
-        tz = tz.replace("/", " - ");
-        return tz;
+        return userTimezone;
     },
     getTime: function() {
         let hours = String(dayjs().hour());
         let minutes = String(dayjs().minute());
         let seconds = String(dayjs().second());
 
-        this.time = this.formatTime(hours, minutes, seconds);
+        const obj = {
+            hours: hours,
+            minutes: minutes,
+            seconds: seconds
+        }
+
+        return obj;
     },
-    formatTime: function(hours, minutes, seconds) {
+    getWeekday: function() {
+        let dayOfWeek = dayjs().day();
+        dayOfWeek = weekArray[dayOfWeek];
+    
+        let userWeekday = dayOfWeek;
+        return userWeekday;
+    },
+    getDate: function() {
+        let dayOfMonth = String(dayjs().date());
+        let monthNumber = dayjs().month();
+        let month = monthsArray[monthNumber];
+        let year = dayjs().year();
+
+        const obj = {
+            day: dayOfMonth,
+            month: month,
+            year: year
+        }
+
+        return obj;
+    },
+    displayData: function() {
+        elTimezone.textContent = this.formatTimezone(this.timezone);
+        elTime.textContent = this.formatTime(this.time);
+        elDate.textContent = this.formatDate(this.date);
+        elWeekday.textContent = this.weekday;
+    },
+    formatTimezone: function(tz) {
+        tz = tz.replace("_", " ");
+        tz = tz.replace("/", " - ");
+        return tz;
+    },
+    formatTime: function(obj) {
+        let {hours, minutes, seconds} = obj;
+
         let timeArray = [hours, minutes, seconds];
-        for (i in timeArray) {
+        for (let i in timeArray) {
             if (timeArray[i].length < 2) {
                 timeArray[i] = `0${timeArray[i]}`;
             }
@@ -65,99 +127,43 @@ let dataHandler = {
 
         return `${hours}:${minutes}:${seconds}`;
     },
-    getWeekday: function() {
-        let dayOfWeek = dayjs().day();
-        dayOfWeek = weekArray[dayOfWeek];
-    
-        let userWeekday = dayOfWeek;
-        this.weekday = userWeekday;
-    },
-    getDate: function() {
-        dayOfMonth = dayjs().date();
-        monthNumber = dayjs().month();
-        month = monthNumber;
-        month = monthsArray[month];
-        year = dayjs().year();
-        
-        this.date = this.formatDate(dayOfMonth, month, year);
-    },
-    formatDate: function(day, month, year) {
-        if (String(day).length < 2) {
+    formatDate: function(obj) {
+        let {day, month, year} = obj;
+
+        if (day.length < 2) {
             day = `0${day}`;
         }
         return `${month} ${day}, ${year}`;
     },
-    displayData: function() {
-        elTimezone.textContent = this.timezone;
-        elTime.textContent = this.time;
-        elDate.textContent = this.date;
-        elWeekday.textContent = this.weekday;
+    changeTimezone: function() {
+        let selectedTz = timezoneContainer.value;
+        this.updateData(selectedTz);
     },
-}
+    updateData: function(tz) {
+        let currentYear = this.date.year;
+        let currentMonth = monthsArray.indexOf(this.date.month) + 1;
+        let currentDay = this.date.day;
+        let currentTime = elTime.textContent;
 
-const modal = document.querySelector(".modal");
-const openModal = document.querySelector(".open-modal");
-const closeModal = document.querySelector(".close-modal");
-const timezoneContainer = document.getElementById("timezone-select");
+        let dayjsObj = dayjs(`${currentYear} -${currentMonth}-${currentDay} ${currentTime}`).tz(tz);
 
-const timezoneList = Intl.supportedValuesOf('timeZone');
+        let timeObj = {
+            hours: String(dayjsObj.$H),
+            minutes: String(dayjsObj.$m),
+            seconds: String(dayjsObj.$s)
+        }
 
-for (i of timezoneList) {
-    let option = document.createElement('option');
-    option.setAttribute("value", i);
-    option.textContent = i;
-    timezoneContainer.appendChild(option);
+        let dateObj = {
+            day: String(dayjsObj.$D),
+            month: monthsArray[dayjsObj.$M],
+            year: dayjsObj.$y
+        }
 
-}
+        this.timezone = tz;
+        this.time = timeObj;
+        this.date = dateObj;
+        this.weekday = weekArray[dayjsObj.$W];
 
-openModal.addEventListener("click", () => modal.showModal());
-
-closeModal.addEventListener("click", (e) => {
-    modal.close();
-    changeTimezone();
-});
-
-function changeTimezone() {
-    currentTimezone = timezoneContainer.value;
-    updateDisplay(currentTimezone);
-}
-
-function updateDisplay(tz) {
-    let dateObj = dayjs(`${year}-${monthNumber + 1}-${dayOfMonth} ${elTime.textContent}`).tz(tz);
-    let updatedYear = dateObj.$y;
-    let updatedMonth = monthsArray[dateObj.$M];
-    let updatedDay = dateObj.$D;
-
-    let updatedHours = dateObj.$H;
-    let updatedMinutes = dateObj.$m;
-    let updatedSeconds = dateObj.$s;
-
-
-    if (String(updatedDay).length < 2) {
-        updatedDay = `0${updatedDay}`;
+        this.displayData();
     }
-    if (String(updatedSeconds).length < 2) {
-        updatedSeconds = `0${updatedSeconds}`;
-    }
-    if (String(updatedMinutes).length < 2) {
-        updatedMinutes = `0${updatedMinutes}`;
-    }
-    if (String(updatedHours).length < 2) {
-        updatedHours = `0${updatedHours}`;
-    }
-
-    let updatedDate = `${updatedMonth} ${updatedDay}, ${updatedYear}`;
-    let updatedTime = `${updatedHours}:${updatedMinutes}:${updatedSeconds}`;
-
-    if (elTime.textContent != updatedTime) {
-        elTime.textContent = updatedTime;
-    }
-    
-    if (elDate.textContent != updatedDate) {
-        elDate.textContent = updatedDate;
-    }
-    
-    tz = tz.replace("_", " ");
-    tz = tz.replace("/", " - ");
-    elTimezone.textContent = tz;
 }

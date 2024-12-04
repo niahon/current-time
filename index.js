@@ -140,12 +140,7 @@ let dataHandler = {
         this.updateData(selectedTz);
     },
     updateData: function(tz) {
-        let currentYear = this.date.year;
-        let currentMonth = monthsArray.indexOf(this.date.month) + 1;
-        let currentDay = this.date.day;
-        let currentTime = elTime.textContent;
-
-        let dayjsObj = dayjs(`${currentYear} -${currentMonth}-${currentDay} ${currentTime}`).tz(tz);
+        let dayjsObj = dayjs().tz(tz);
 
         let timeObj = {
             hours: String(dayjsObj.$H),
@@ -164,6 +159,6 @@ let dataHandler = {
         this.date = dateObj;
         this.weekday = weekArray[dayjsObj.$W];
 
-        this.displayData();
+        this.displayData(); 
     }
 }

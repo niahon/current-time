@@ -26,9 +26,12 @@ main {
     .info-container {
         padding: 2.5rem;
         border-radius: 2rem;
-        font-size: 2rem;
+        font-size: 1.75rem;
         background-color: white;
         
+        @media (min-width: 370px) {
+            font-size: 2.25em;
+        }
         @media (min-width: 480px) {
             font-size: 2.75em;
         }
@@ -37,7 +40,7 @@ main {
             font-size: 3.25em;
         }
         @media (min-width: 1000px) {
-            font-size: 3em;   
+            font-size: 3.5em;   
         }
     }
         #timezone {
@@ -47,9 +50,12 @@ main {
         #time {
             font-size: 2em;
         }
+        #weekday {
+            color: rgb(79, 79, 255);
+        }
         #weekday, 
         #date {
-            font-size: 0.6em;
+            font-size: 0.5em;
         }
 
 .invisible {

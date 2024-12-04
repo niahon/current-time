@@ -18,6 +18,7 @@ const modal = document.querySelector(".modal");
 const openModal = document.querySelector(".open-modal");
 const closeModal = document.querySelector(".close-modal");
 const timezoneContainer = document.getElementById("timezone-select");
+const xButton = document.getElementById("x-button");
 
 
 const monthsArray = [
@@ -49,6 +50,10 @@ closeModal.addEventListener("click", (e) => {
     modal.close();
     dataHandler.changeTimezone();
 });
+
+xButton.addEventListener("click", () => {
+    modal.close();
+})
 
 
 // functionality for getting, formatting, displaying and updating data 

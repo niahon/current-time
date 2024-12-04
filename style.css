@@ -72,10 +72,33 @@ main {
     }
 
 .modal {
+    font-size: 1.15rem;
     margin: 40vh auto 0 auto;
-    padding: 1.5rem;
-}
-
+    padding: 2rem;
+    border-radius: 1rem;
+}   
+    .modal-header-flex {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+        #x-button {
+            background: red;
+            color: white;
+            padding: 0.3rem 0.5rem;
+            height: 50%;
+            align-self: center;
+            border: 1px solid black;
+            border-radius: 1rem;
+        }
+    select {
+        padding: 0.5rem;
+        font-size: 1.25rem;
+    }
+    .close-modal {
+        padding: 0.5rem;
+        font-size: 1.25rem;
+    }
 #timezone-flex {
     display: flex;
     gap: 0.5rem;
